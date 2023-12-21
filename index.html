@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        width: 100vw;
+        height: 100vh;
+        margin: 0;
+      }
+      #container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      #image {
+        margin-bottom: 10px;
+        cursor: pointer;
+      }
+      p {
+        color: white;
+        font-size: 30px;
+        margin: 0;
+        cursor: pointer;
+      }
+      #text-container {
+        text-align: center;
+      }
+    </style>
+    <script>
+      window.onload = () => {
+        const { ipcRenderer } = window.require("electron");
+        console.log(ipcRenderer);
+        ipcRenderer.send("open");
+
+        const image = document.getElementById("image");
+        ipcRenderer.on("image-url", (event, src) => {
+          image.src = src;
+        });
+        const container = document.getElementById("container");
+        container.onclick = () => {
+          ipcRenderer.send("close-window");
+        };
+        const textContainer = document.getElementById("text-container");
+        ipcRenderer.on("text", (event, text) => {
+          text = text.split("\n");
+          textContainer.innerHTML = "";
+
+          text.forEach((line) => {
+            const p = document.createElement("p");
+            p.textContent = line;
+            textContainer.appendChild(p);
+          });
+        });
+      };
+    </script>
+  </head>
+  <body>
+    <div id="container">
+      <img draggable="false" id="image" />
+      <div id="text-container">
+        <p>제발 파일을 저장하세요</p>
+        <p>(Esc로 창 닫기)</p>
+      </div>
+    </div>
+  </body>
+</html>
