@@ -26,6 +26,7 @@ If installed as an exe file, it will start automatically when the computer boots
 ### Install packages
 
 ```bash
+npm install -g typescript nodemon eslint
 npm install
 ```
 
